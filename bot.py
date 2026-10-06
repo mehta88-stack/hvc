@@ -22,7 +22,8 @@ ACCOUNT = env("HIVE_ACCOUNT")
 POSTING_KEY = env("HIVE_POSTING_KEY")
 APP_NAME = env("APP_NAME", "hive").strip() or "hive"  # shown as "app" in the comment metadata
 # Names of real Hive front-ends: the bot must not claim to be one of them.
-KNOWN_CLIENTS = {"hivesigner", "esteem", "dbuzz", "waivio", "3speak", "actifit", "splinterlands"}
+KNOWN_CLIENTS = {"ecency", "peakd", "hiveblog", "hive.blog", "hivesigner", "esteem", "leofinance",
+                 "dbuzz", "waivio", "3speak", "actifit", "splinterlands"}
 if APP_NAME.split("/")[0].lower() in KNOWN_CLIENTS:
     print(f"APP_NAME '{APP_NAME}' belongs to a real Hive client, using 'hive' instead")
     APP_NAME = "hive"
@@ -396,6 +397,8 @@ def main():
 
     hive = None if DRY_RUN else Hive(node=[API], keys=[POSTING_KEY])
     checks, done, seen_authors, fails = 0, 0, set(), 0
+    why = {"hp_below": 0, "hp_above": 0, "project_profile": 0,
+           "no_text": 0, "generic": 0, "repeat": 0}
 
     for p in cands:
         if done >= budget or checks >= MAX_HP_CHECKS:
@@ -406,7 +409,14 @@ def main():
         checks += 1
         try:
             hp = hp_of(p["author"])
-            if hp < MIN_HP or hp > MAX_HP or profile_looks_like_project(p["author"]):
+            if hp < MIN_HP:
+                why["hp_below"] += 1
+                continue
+            if hp > MAX_HP:
+                why["hp_above"] += 1
+                continue
+            if profile_looks_like_project(p["author"]):
+                why["project_profile"] += 1
                 continue
             if gem_today >= GEMINI_DAILY_CAP or run_calls >= GEMINI_PER_RUN:
                 print("gemini call cap reached, stopping this run")
@@ -437,7 +447,14 @@ def main():
                 break
             continue
         fails = 0
-        if not text or is_generic(text, p) or too_similar(text, state["recent"]):
+        if not text:
+            why["no_text"] += 1
+            continue
+        if is_generic(text, p):
+            why["generic"] += 1
+            continue
+        if too_similar(text, state["recent"]):
+            why["repeat"] += 1
             continue
         text = add_emoji(text, p)
 
@@ -473,6 +490,7 @@ def main():
             time.sleep(random.randint(20, 90))
         done += 1
 
+    print(f"checked authors={checks}, filtered out: {why}")
     print(f"commented={done}")
     save_state(fernet, state)
 
