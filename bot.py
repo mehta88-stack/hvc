@@ -22,7 +22,7 @@ ACCOUNT = env("HIVE_ACCOUNT")
 POSTING_KEY = env("HIVE_POSTING_KEY")
 APP_NAME = env("APP_NAME", "hive").strip() or "hive"  # shown as "app" in the comment metadata
 # Names of real Hive front-ends: the bot must not claim to be one of them.
-KNOWN_CLIENTS = {"ecency", "peakd", "hiveblog", "hive.blog", "hivesigner", "esteem", "leofinance",
+KNOWN_CLIENTS = {"ecency", "peakd", "esteem", "leofinance",
                  "dbuzz", "waivio", "3speak", "actifit", "splinterlands"}
 if APP_NAME.split("/")[0].lower() in KNOWN_CLIENTS:
     print(f"APP_NAME '{APP_NAME}' belongs to a real Hive client, using 'hive' instead")
