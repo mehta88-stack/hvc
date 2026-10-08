@@ -68,9 +68,7 @@ SYSTEM += (f"\n\nAdditional rules: {LANG_RULE}. Do not use any emojis, they are 
            "mention coins, tokens, exchanges or links the author did not mention, and never promote "
            "anything. Comment only on the ideas, explanation or experience in the post.")
 
-FLOWERS = ["\U0001F338", "\U0001F337", "\U0001F33A", "\U0001F339", "\U0001F490",
-           "\U0001F33C", "\U0001F33B", "\U0001FAB7"]          # 🌸🌷🌺🌹💐🌼🌻🪷
-SOFT = ["\U0001F495", "\U0001F98B", "\u2728", "\U0001F90D"]  # 💕🦋✨🤍
+
 if env("EMOJIS"):
     FLOWERS = [e.strip() for e in env("EMOJIS").split(",") if e.strip()] or FLOWERS
 EMOJI_RE = re.compile("[\U0001F300-\U0001FAFF\u2600-\u27BF]")
