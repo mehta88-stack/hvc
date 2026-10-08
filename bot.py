@@ -22,12 +22,11 @@ ACCOUNT = env("HIVE_ACCOUNT")
 POSTING_KEY = env("HIVE_POSTING_KEY")
 APP_NAME = env("APP_NAME", "hive").strip() or "hive"  # shown as "app" in the comment metadata
 # Names of real Hive front-ends: the bot must not claim to be one of them.
-KNOWN_CLIENTS = {"ecency", "peakd", "esteem", "leofinance",
-                 "dbuzz", "waivio", "3speak", "actifit", "splinterlands"}
+KNOWN_CLIENTS = {"ecency", "peakd", "esteem", "dbuzz", "waivio", "3speak", "actifit", "splinterlands"}
 if APP_NAME.split("/")[0].lower() in KNOWN_CLIENTS:
     print(f"APP_NAME '{APP_NAME}' belongs to a real Hive client, using 'hive' instead")
     APP_NAME = "hive"
-MIN_HP = float(env("MIN_HP", "2000"))
+MIN_HP = float(env("MIN_HP", "5000"))
 MAX_HP = float(env("MAX_HP", "9900"))   # authors above this are skipped
 DAILY_LIMIT = int(env("DAILY_LIMIT", "20"))
 MAX_PER_RUN = int(env("MAX_PER_RUN", "1"))
@@ -173,7 +172,7 @@ _kw = ["bitcoin", "btc", "ethereum", "eth", "crypto\\w*", "blockchain", "defi", 
 KW_RE = re.compile(r"\b(?:" + "|".join(_kw) + r")\b", re.I)
 # scammy / promotional crypto posts are skipped, never rewarded
 _skip = ["airdrops?", "presale", "pre-sale", "giveaways?", "referral", "100x", "guaranteed",
-         "signals?", "pump", "free tokens?", "double your"] + [
+         "signals?", "free tokens?", "double your"] + [
     re.escape(k.strip().lower()) for k in env("EXTRA_SKIP_WORDS").split(",") if k.strip()]
 SKIP_RE = re.compile(r"\b(?:" + "|".join(_skip) + r")\b", re.I)
 
