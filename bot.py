@@ -47,9 +47,9 @@ TAGS = [t.strip().lower() for t in
 SORT = env("SORT", "created").lower()  # created | trending | hot
 if SORT not in ("trending", "hot", "created"):
     SORT = "created"
-MAX_PAGES = int(env("MAX_PAGES", "10"))
+MAX_PAGES = int(env("MAX_PAGES", "20"))
 EMOJI_CHANCE = max(0.0, min(1.0, float(env("EMOJI_CHANCE", "0"))))
-KEYWORD_MIN = int(env("KEYWORD_MIN", "3"))  # crypto keyword hits needed in title+body
+KEYWORD_MIN = int(env("KEYWORD_MIN", "1"))  # crypto keyword hits needed in title+body
 GEMINI_DAILY_CAP = int(env("GEMINI_DAILY_CAP", "18"))  # free tier: 20 requests/day
 GEMINI_PER_RUN = int(env("GEMINI_PER_RUN", "3"))
 GEMINI_GAP_SEC = int(env("GEMINI_GAP_SEC", "13"))
