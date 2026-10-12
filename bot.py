@@ -26,7 +26,7 @@ KNOWN_CLIENTS = {"ecency", "peakd", "esteem", "dbuzz", "waivio", "3speak", "acti
 if APP_NAME.split("/")[0].lower() in KNOWN_CLIENTS:
     print(f"APP_NAME '{APP_NAME}' belongs to a real Hive client, using 'hive' instead")
     APP_NAME = "hive"
-MIN_HP = float(env("MIN_HP", "5000"))
+MIN_HP = float(env("MIN_HP", "2000"))
 MAX_HP = float(env("MAX_HP", "9900"))   # authors above this are skipped
 DAILY_LIMIT = int(env("DAILY_LIMIT", "20"))
 MAX_PER_RUN = int(env("MAX_PER_RUN", "1"))
