@@ -41,6 +41,10 @@ LLM_URL = f"https://generativelanguage.googleapis.com/v1beta/models/{MODEL}:gene
 DRY_RUN = env("DRY_RUN", "true").lower() != "false"
 LOG_TEXT = env("LOG_TEXT", "false").lower() == "true"
 BLACKLIST = {a.strip().lower() for a in env("BLACKLIST").split(",") if a.strip()}
+# posts that list any of these accounts as a beneficiary are skipped entirely
+# (comma separated, "@" optional; leave empty to disable the filter)
+SKIP_BENEFICIARY = {b.strip().lstrip("@").lower()
+                    for b in env("SKIP_BENEFICIARY").split(",") if b.strip()}
 TAGS = [t.strip().lower() for t in
         (env("TAGS") or "cryptocurrency,crypto,bitcoin,ethereum,btc,altcoin,blockchain,defi").split(",")
         if t.strip()]
@@ -147,6 +151,14 @@ def tag_posts(tag, cutoff):
         last = res[-1]
         start = {"start_author": last["author"], "start_permlink": last["permlink"]}
     return out
+
+
+def has_skipped_beneficiary(p):
+    """True if the post sets one of SKIP_BENEFICIARY as a beneficiary."""
+    if not SKIP_BENEFICIARY:
+        return False
+    return any((b.get("account") or "").lower() in SKIP_BENEFICIARY
+               for b in p.get("beneficiaries") or [])
 
 
 def recent_posts():
@@ -376,6 +388,7 @@ def main():
     cands = [p for p in posts
              if p["author"].lower() not in BLACKLIST
              and p["author"] != ACCOUNT
+             and not has_skipped_beneficiary(p)
              and f"{p['author']}/{p['permlink']}" not in done_posts
              and ACCOUNT not in {v["voter"] for v in p.get("active_votes", [])}
              and now().timestamp() - state["last_comment"].get(p["author"], 0) > cool
