@@ -50,6 +50,7 @@ jobs:
           MODEL: ${{ vars.MODEL }}
           DRY_RUN: ${{ vars.DRY_RUN }}
           APP_NAME: ${{ vars.APP_NAME }}
+          SKIP_BENEFICIARY: ${{ vars.SKIP_BENEFICIARY }}
           LOG_TEXT: ${{ vars.LOG_TEXT }}
           MAX_WORDS: ${{ vars.MAX_WORDS }}
           MIN_AGE_MIN: ${{ vars.MIN_AGE_MIN }}
